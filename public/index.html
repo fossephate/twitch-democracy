@@ -1,0 +1,70 @@
+<html>
+
+
+
+<head>
+	<title>twitch democracy</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/6.1.5/css/bootstrap-slider.min.css">
+
+	<!--<link rel="stylesheet" href="css/libs/mobile-console.min.css">-->
+	<link rel="stylesheet" href="css/stylesheet.css">
+
+	<script src="https://fosse.co/8100/socket.io/socket.io.js"></script>
+
+	<!-- 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script> -->
+	<!-- 	<script src="js/plotly-latest.min.js"></script> -->
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+	<script src="js/client.js"></script>
+
+<!-- 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
+	<!-- twitchDemocracy -->
+<!-- 	<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6534908631362272" data-ad-slot="8606571743" data-ad-format="auto"></ins>
+	<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+	</script> -->
+
+</head>
+
+
+
+
+<body>
+
+	<canvas id="boardCanvas"></canvas>
+
+	<div id="chart">
+		<div id="myChart">
+		</div>
+	</div>
+
+	
+	
+
+	<div id="chat">
+		<div id="messages">
+			<ul id="messageList"></ul>
+		</div>
+		
+		<form id="chatForm" class="form-inline">
+			<div class="form-group">
+				<input id="msgInput" class="form-control" type="text" autocomplete="off" />
+				<button id="sendButton" class="btn btn-primary" type="submit">Send</button>
+			</div>
+		</form>
+	</div>
+
+
+</body>
+
+</html>
