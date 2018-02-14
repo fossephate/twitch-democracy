@@ -27,6 +27,7 @@ from io import BytesIO
 
 # misc
 import time
+import random
 
 # mouse and keyboard
 import pyautogui
@@ -126,15 +127,18 @@ def updateImage():
 			fnt = ImageFont.truetype('fonts/FreeMonoBold.ttf', 25)
 
 		# dotSize:
-		dS = 2#10
+		dS = 4#10
 		# vertical offset:
 		vO = 20#40
 
+
+		transparency = 150
+
 		# draw dots for accuracy
-		d.pieslice([x-dS, y-dS, x+dS, y+dS], 0, 360, fill=(255, 255, 255, 255), outline=None)
+		d.pieslice([x-dS, y-dS, x+dS, y+dS], 0, 360, fill=(255, 255, 255, transparency), outline=None)
 
 		# write text
-		d.text((x-(w/2), y-(h/2)+vO), move, font=fnt, fill=(255, 255, 255, 255))
+		d.text((x-(w/2), y-(h/2)+vO), move, font=fnt, fill=(255, 255, 255, transparency))
 
 		#d.text(((W-w)/2,(H-h)/2), move, fill="black")
 
@@ -144,10 +148,11 @@ def updateImage():
 
 	# convert image to base64 string
 	buffer = BytesIO()
-	im.save(buffer, format="JPEG", quality=1)#30
+	im.save(buffer, format="JPEG", quality=30)#30
+
 	img_str = str(base64.b64encode(buffer.getvalue()).decode())
 	socketIO.emit("image", img_str);
-	socketIO.wait(0.5)
+	socketIO.wait(0.05)
 
 
 while True:
@@ -163,7 +168,7 @@ while True:
 	# 	time.sleep(0.1)
 
 	updateImage()
-	time.sleep(0.5)
+	time.sleep(0.2)
 
 	# press escape to exit program
 	if win32api.GetAsyncKeyState(win32con.VK_ESCAPE):
