@@ -40,6 +40,28 @@ screenWidth, screenHeight = pyautogui.size()
 
 
 socketIO = SocketIO('fosse.co/8100/', 80, LoggingNamespace)
+moveList = {}
+
+gridWidth = 20
+gridHeight = 10
+letters = "ABCDEFGHIJKLMNO"
+
+
+horizontalSpacing = screenWidth / gridWidth
+verticalSpacing = screenHeight / gridHeight
+xoffset = 50
+yoffset = 50
+
+for i in range(gridHeight):
+	for j in range(gridWidth):
+		x = xoffset + (j*horizontalSpacing)
+		y = yoffset + (i*verticalSpacing)
+		num = j
+		letter = letters[i]
+		move = str(letter + str(num))
+		moveList[move] = (x, y)
+
+
 
 def click(x, y):
 	pyautogui.moveTo(x, y, duration=0.5)
@@ -52,61 +74,7 @@ def on_msg(*args):
 
 
 def getCoords(move):
-	x, y = (0, 0)
-	if(move[0] == "C"):
-		if(len(move) == 3):
-			num = int(move[1] + move[2])
-		else:
-			num = int(move[1])
-
-		spacing = 100
-		xoffset = 600
-
-		x = xoffset + (num*spacing)
-		y = 750
-		
-
-	elif(move[0] == "B"):
-		if(len(move) == 3):
-			num = int(move[1] + move[2])
-		else:
-			num = int(move[1])
-
-		spacing = 100
-		xoffset = 600
-
-		x = xoffset + (num*spacing)
-		y = 1100
-
-	elif(move[0] == "H" and move[1] != "H"):
-		if(len(move) == 3):
-			num = int(move[1] + move[2])
-		else:
-			num = int(move[1])
-
-		spacing = 100
-		xoffset = 600
-
-		x = xoffset + (num*spacing)
-		y = 1850
-
-	elif(move == "HH"):
-		x = 1500
-		y = 1500
-
-	elif(move == "PP"):
-		x = 1750
-		y = 1500
-
-	elif(move == "FACE"):
-		x = 1500
-		y = 300
-		
-	elif(move == "END"):
-		x = 2530
-		y = 900
-
-	return (x, y)
+	return moveList[move]
 
 
 def executeMoves(*args):
@@ -147,17 +115,15 @@ def updateImage():
 
 
 	# list of all moves
-	allMoves = ["HH", "PP", "FACE", "END"]
-	for i in range(16):
+	allMoves = []
+	for i in range(gridWidth):
 		i += 1
-		allMoves.append("C"+str(i))
-		allMoves.append("B"+str(i))
-		allMoves.append("H"+str(i))
-
+		for j in range(gridHeight):
+			allMoves.append(letters[j]+str(i))
+		#allMoves.append("A"+str(i))
 
 	# draw text, half opacity
-	for i in range(len(allMoves)):
-		move = allMoves[i]
+	for move in moveList:
 
 		x, y = getCoords(move)
 		w, h = d.textsize(move, fnt)
@@ -165,36 +131,31 @@ def updateImage():
 		#d.text((x,y), move, font=fnt, fill=(0,0,0,255))
 
 		# reduce font size for large move names
-		if(len(move) == 3):
-			fnt = ImageFont.truetype('fonts/FreeMonoBold.ttf', 50)
+		if(len(move) > 3):
+			fnt = ImageFont.truetype('fonts/FreeMonoBold.ttf', 20)
 		else:
-			fnt = ImageFont.truetype('fonts/FreeMonoBold.ttf', 60)
+			fnt = ImageFont.truetype('fonts/FreeMonoBold.ttf', 25)
+
+		# dotSize:
+		dS = 2#10
+		# vertical offset:
+		vO = 20#40
 
 		# draw dots for accuracy
-		# also more transparent
-		d.pieslice([x-10, y-10, x+10, y+10], 0, 360, fill=(255, 255, 255, 200), outline=None)
+		d.pieslice([x-dS, y-dS, x+dS, y+dS], 0, 360, fill=(255, 255, 255, 255), outline=None)
 
 		# write text
-		d.text((x-(w/2), y-(h/2)+40), move, font=fnt, fill=(255, 255, 255, 200))
+		d.text((x-(w/2), y-(h/2)+vO), move, font=fnt, fill=(255, 255, 255, 255))
 
 		#d.text(((W-w)/2,(H-h)/2), move, fill="black")
-
-
-	
-
 
 	# combine images
 	im = Image.alpha_composite(screenshot, txt)
 	#out.show()
 
-	
-
-
-
-
 	# convert image to base64 string
 	buffer = BytesIO()
-	im.save(buffer, format="JPEG", quality=30)
+	im.save(buffer, format="JPEG", quality=30)#30
 	img_str = str(base64.b64encode(buffer.getvalue()).decode())
 	socketIO.emit("image", img_str);
 	socketIO.wait(0.5)
@@ -208,9 +169,12 @@ while True:
 		socketIO.wait(2)
 
 	# press I to update the image
-	if win32api.GetAsyncKeyState(ord("I")):
-		updateImage()
-		time.sleep(0.1)
+	# if win32api.GetAsyncKeyState(ord("I")):
+	# 	updateImage()
+	# 	time.sleep(0.1)
+
+	updateImage()
+	time.sleep(2)
 
 	# press escape to exit program
 	if win32api.GetAsyncKeyState(win32con.VK_ESCAPE):
