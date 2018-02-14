@@ -63,7 +63,8 @@ $(document).ready(function() {
 		
 		
 		var img = new Image();
-		img.src = 'data:image/jpeg;base64,' + data.buffer;
+		img.src = "data:image/jpeg;base64," + data.buffer;
+		//console.log(data.buffer);
 		
 		//ctx.canvas.width = 500;
 		//ctx.canvas.height = 500;
@@ -274,9 +275,7 @@ $(document).ready(function() {
 
 
 		//console.log("updated");
-
 		//graphDiv.data = newData;
-
 		//Plotly.restyle("myChart", newData, 0);
 		Plotly.redraw(graphDiv, 0);
 	});

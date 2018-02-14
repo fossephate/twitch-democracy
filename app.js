@@ -36,7 +36,7 @@
 // server.listen(8100);
 // console.log("Multiplayer app listening on port 8100");
 
-var express = require('express');
+var express = require("express");
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
@@ -46,74 +46,28 @@ var port = process.env.PORT || 8100;
 var twitch = require("./server/twitch.js");
 
 server.listen(port, function() {
-    console.log('Server listening at port %d', port);
+    console.log("Server listening at port %d", port);
 });
 
-
-
 var sys = new twitch.system();
-sys.validCommands.push("C1");
-sys.validCommands.push("C2");
-sys.validCommands.push("C3");
-sys.validCommands.push("C4");
-sys.validCommands.push("C5");
-sys.validCommands.push("C6");
-sys.validCommands.push("C7");
-sys.validCommands.push("C8");
-sys.validCommands.push("C9");
-sys.validCommands.push("C10");
-sys.validCommands.push("C11");
-sys.validCommands.push("C12");
-sys.validCommands.push("C13");
-sys.validCommands.push("C14");
-sys.validCommands.push("C15");
-sys.validCommands.push("C16");
+var gridWidth = 20;
+var gridHeight = 10;
+var letters = "ABCDEFGHIJKLMNO";
 
+for(var i = 0; i < gridHeight; i++) {
+	for(var j = 0; j < gridWidth; j++) {
+		//x = xoffset + (j*horizontalSpacing)
+		//y = yoffset + (i*verticalSpacing)
+		var num = j;
+		var letter = letters[i];
+		var move = letter + num;
+		//moveList[move] = (x, y);
+		sys.validCommands.push(move);
+	}
+}
 
-sys.validCommands.push("B1");
-sys.validCommands.push("B2");
-sys.validCommands.push("B3");
-sys.validCommands.push("B4");
-sys.validCommands.push("B5");
-sys.validCommands.push("B6");
-sys.validCommands.push("B7");
-sys.validCommands.push("B8");
-sys.validCommands.push("B9");
-sys.validCommands.push("B10");
-sys.validCommands.push("B11");
-sys.validCommands.push("B12");
-sys.validCommands.push("B13");
-sys.validCommands.push("B14");
-sys.validCommands.push("B15");
-sys.validCommands.push("B16");
-
-
-sys.validCommands.push("H1");
-sys.validCommands.push("H2");
-sys.validCommands.push("H3");
-sys.validCommands.push("H4");
-sys.validCommands.push("H5");
-sys.validCommands.push("H6");
-sys.validCommands.push("H7");
-sys.validCommands.push("H8");
-sys.validCommands.push("H9");
-sys.validCommands.push("H10");
-sys.validCommands.push("H11");
-sys.validCommands.push("H12");
-sys.validCommands.push("H13");
-sys.validCommands.push("H14");
-sys.validCommands.push("H15");
-sys.validCommands.push("H16");
-
-
-sys.validCommands.push("HH");
-sys.validCommands.push("PP");
-sys.validCommands.push("FACE");
-
-sys.validCommands.push("END");
 
 var numberOfConnections = 0;
-
 var clients = [];
 
 function Client(socket) {
@@ -156,7 +110,9 @@ io.on('connection', function(socket) {
     });
 	
 	updateCharts();
-	updateImages();
+	updateImage();
+	
+	//setInterval(updateImage, 1000);
 
 
 //     socket.on("chat message", function(msg) {
@@ -176,16 +132,14 @@ io.on('connection', function(socket) {
 		
 		// fix to only update when there is a vote
 		updateCharts();
-		
   	});
 	
 	socket.on("image", function(data) {
 		var obj = {};
 		obj.buffer = data;
-		
-		sys.currentImageData = obj;
-		
-		updateImages();
+		sys.currentImage = obj;
+		//updateImage();
+		setTimeout(updateImage, 10);
 	});
 	
 	
@@ -221,8 +175,8 @@ io.on('connection', function(socket) {
 
 });
 
-function updateImages() {
-	io.emit("updateImage", sys.currentImageData);
+function updateImage() {
+	io.emit("updateImage", sys.currentImage);
 }
 
 
@@ -233,20 +187,5 @@ function updateCharts() {
 	chartData.numberOfVotes = sys.numberOfVotes;
 	
 	io.emit("updateChart", chartData);
-	
-// 	for(var key in clients) {
-// 		var client = clients[key];
-// 	}
 }
-
-
-//setInterval(sys.update, 15000);
-
-
-
-
-
-
-
-
 

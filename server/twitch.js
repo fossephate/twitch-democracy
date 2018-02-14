@@ -9,7 +9,7 @@ exports.system = function() {
 	this.allVotes = [];
 	this.voteCounts = [];
 	this.numberOfVotes = 0;
-	this.currentImageData = {};
+	this.currentImage = {};
 
 
 	this.recountVotes = function() {
