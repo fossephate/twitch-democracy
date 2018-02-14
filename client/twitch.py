@@ -97,8 +97,6 @@ socketIO.on("executeMoves", executeMoves)
 
 
 
-
-
 def updateImage():
 
 	# capture screenshot
@@ -112,15 +110,6 @@ def updateImage():
 	fnt = ImageFont.truetype('fonts/FreeMono.ttf', 70)
 	# get a drawing context
 	d = ImageDraw.Draw(txt)
-
-
-	# list of all moves
-	allMoves = []
-	for i in range(gridWidth):
-		i += 1
-		for j in range(gridHeight):
-			allMoves.append(letters[j]+str(i))
-		#allMoves.append("A"+str(i))
 
 	# draw text, half opacity
 	for move in moveList:
@@ -155,7 +144,7 @@ def updateImage():
 
 	# convert image to base64 string
 	buffer = BytesIO()
-	im.save(buffer, format="JPEG", quality=30)#30
+	im.save(buffer, format="JPEG", quality=1)#30
 	img_str = str(base64.b64encode(buffer.getvalue()).decode())
 	socketIO.emit("image", img_str);
 	socketIO.wait(0.5)
@@ -174,7 +163,7 @@ while True:
 	# 	time.sleep(0.1)
 
 	updateImage()
-	time.sleep(2)
+	time.sleep(0.5)
 
 	# press escape to exit program
 	if win32api.GetAsyncKeyState(win32con.VK_ESCAPE):
